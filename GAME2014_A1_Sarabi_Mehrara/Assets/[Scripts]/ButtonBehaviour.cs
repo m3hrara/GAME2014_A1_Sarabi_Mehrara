@@ -1,3 +1,12 @@
+/*
+ ButtonBehaviour.cs
+Author: Mehrara Sarabi 
+Student ID: 101247463
+Last modified: 2021-10-04
+Description: This program contains all the button behaviours needed for the game. Including menu, tutorial, next, back, exit buttons.
+ 
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
