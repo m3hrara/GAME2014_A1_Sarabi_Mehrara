@@ -1,41 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Pathfinding;
 public class EnemyBehaviour : MonoBehaviour
 {
-    public GameObject player;
     public float speed;
     public float direction;
     public Transform startTransform;
+    public Transform playerTransform;
+    public AIPath aiPath;
+    public AIDestinationSetter destinationSetter;
     // Start is called before the first frame update
     void Start()
     {
-        
+        destinationSetter.target = startTransform;
     }
-
+    private void SetLocalScale()
+    {
+        if(aiPath.desiredVelocity.x>0)
+        {
+            transform.localScale = new Vector3(0.25f, 0.25f, 1f);
+        }
+        else if (aiPath.desiredVelocity.x < 0)
+        {
+            transform.localScale = new Vector3(-0.25f, 0.25f, 1f);
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        patrol();
+        SetLocalScale();
     }
     private void followPlayer()
     {
-
+        destinationSetter.target = playerTransform;
     }
     private void patrol()
     {
-
+        destinationSetter.target = startTransform;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Player")
         {
             followPlayer();
-        }
-        if (collision.gameObject.tag == "Wall")
-        {
-            direction *= -1;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
