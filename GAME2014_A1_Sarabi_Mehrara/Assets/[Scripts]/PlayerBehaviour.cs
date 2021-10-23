@@ -21,6 +21,8 @@ public class PlayerBehaviour : MonoBehaviour
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public LayerMask enemyLayer;
+    private int maxHealth = 100;
+    private int currentHealth = 100;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,21 @@ public class PlayerBehaviour : MonoBehaviour
         m_rigidBody = GetComponent<Rigidbody2D>();
         characterScale = transform.localScale;
     }
+    //public void applyDamage(int damage)
+    //{
+    //    currentHealth -= damage;
+    //    if(currentHealth<=0)
+    //    {
+    //        Die();
+    //    }
+    //}
+    //private void Die()
+    //{
+    //    Debug.Log(" asd Die yo");
+    //    animator.SetBool("isDead", true);
+    //    this.enabled = false;
+    //    GetComponent<Collider2D>().enabled = false;
+    //}
     public void enableAttacking()
     {
         animator.SetTrigger("AttackTrigger");
