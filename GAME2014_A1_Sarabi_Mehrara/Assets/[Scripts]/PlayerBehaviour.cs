@@ -4,7 +4,7 @@ using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using UnityEngine.UI;
 public class PlayerBehaviour : MonoBehaviour
 {
     [Header("Player Speed")]
@@ -18,6 +18,9 @@ public class PlayerBehaviour : MonoBehaviour
     private Vector2 m_Direction;
     private int touchID;
     public Animator animator;
+    public Transform attackPoint;
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayer;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +31,18 @@ public class PlayerBehaviour : MonoBehaviour
     public void enableAttacking()
     {
         animator.SetTrigger("AttackTrigger");
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+        foreach(Collider2D enemy in hitEnemies)
+        {
+            Debug.Log("Hit");
+            enemy.GetComponent<EnemyBehaviour>().Die();
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
     // Update is called once per frame
     void Update()

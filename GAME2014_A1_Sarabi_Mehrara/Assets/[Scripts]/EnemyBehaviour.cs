@@ -10,6 +10,7 @@ public class EnemyBehaviour : MonoBehaviour
     public Transform playerTransform;
     public AIPath aiPath;
     public AIDestinationSetter destinationSetter;
+    public Animator animator;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,5 +53,12 @@ public class EnemyBehaviour : MonoBehaviour
         {
             patrol();
         }
+    }
+    public void Die()
+    {
+        Debug.Log("Deadanim");
+        animator.SetBool("isDead", true);
+        this.enabled = false;
+        GetComponent<Collider2D>().enabled = false;
     }
 }
