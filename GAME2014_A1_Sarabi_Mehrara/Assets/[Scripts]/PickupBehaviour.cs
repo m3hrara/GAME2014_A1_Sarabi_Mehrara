@@ -1,3 +1,10 @@
+/*
+PickupBehaviour.cs
+Author: Mehrara Sarabi 
+Student ID: 101247463
+Last modified: 2021-10-24
+Description: This code plays the pickup sound and destroys the object after.
+*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

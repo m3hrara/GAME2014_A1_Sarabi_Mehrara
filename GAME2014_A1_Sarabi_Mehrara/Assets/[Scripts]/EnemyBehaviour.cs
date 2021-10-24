@@ -1,3 +1,12 @@
+/*
+EnemyBehaviour.cs
+Author: Mehrara Sarabi 
+Student ID: 101247463
+Last modified: 2021-10-24
+Description: This code encapsulates all enemy behaviour. It has a* pathfinding behaviour and will start following the player
+taking the quickest path if player is within a certain distance. It will apply damage on player if they get closer. Takes care of 
+animation triggers. Enemy has a randomized gem drop!
+*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
