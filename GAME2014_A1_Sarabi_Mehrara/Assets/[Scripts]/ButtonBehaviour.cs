@@ -34,4 +34,8 @@ public class ButtonBehaviour : MonoBehaviour
     {
         SceneManager.LoadScene("Start");
     }
+    public void OnReestartButtonPressed()
+    {
+        SceneManager.LoadScene("Main");
+    }
 }

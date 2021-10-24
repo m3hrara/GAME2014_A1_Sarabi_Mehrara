@@ -12,6 +12,13 @@ public class PlayerBehaviour : MonoBehaviour
     public float maxSpeed;
     public float lerpTime;
 
+    public AudioSource pickupSound;
+    public AudioSource hitSound;
+    public AudioSource damageSound;
+
+
+    public Text scoreText;
+    public Text healthText;
     private Rigidbody2D m_rigidBody;
     private Vector3 m_touchesEnded;
     private Vector3 characterScale;
@@ -23,35 +30,45 @@ public class PlayerBehaviour : MonoBehaviour
     public LayerMask enemyLayer;
     private int maxHealth = 100;
     private int currentHealth = 100;
+    public int currentScore = 0;
+    public GameObject endImage;
+    public Text resultText;
     // Start is called before the first frame update
     void Start()
     {
+        scoreText.text = ("SCORE: " + currentScore);
+        healthText.text = ("HEALTH: " + currentHealth);
+
         m_touchesEnded = new Vector3();
         m_rigidBody = GetComponent<Rigidbody2D>();
         characterScale = transform.localScale;
     }
-    //public void applyDamage(int damage)
-    //{
-    //    currentHealth -= damage;
-    //    if(currentHealth<=0)
-    //    {
-    //        Die();
-    //    }
-    //}
-    //private void Die()
-    //{
-    //    Debug.Log(" asd Die yo");
-    //    animator.SetBool("isDead", true);
-    //    this.enabled = false;
-    //    GetComponent<Collider2D>().enabled = false;
-    //}
+    public void applyDamage(int damage)
+    {
+        damageSound.Play();
+        currentHealth -= damage;
+        healthText.text = ("HEALTH: " + currentHealth);
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+    private void Die()
+    {
+        animator.SetTrigger("Dead");
+        endImage.SetActive(true);
+        resultText.text = "YOU LOST!";
+        this.enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        Time.timeScale = 0;
+    }
     public void enableAttacking()
     {
         animator.SetTrigger("AttackTrigger");
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
         foreach(Collider2D enemy in hitEnemies)
         {
-            Debug.Log("Hit");
+            hitSound.Play();
             enemy.GetComponent<EnemyBehaviour>().Die();
         }
     }
@@ -65,6 +82,8 @@ public class PlayerBehaviour : MonoBehaviour
     void Update()
     {
         _Move();
+        scoreText.text = ("SCORE: " + currentScore);
+        healthText.text = ("HEALTH: " + currentHealth);
     }
     private void _Move()
     {
@@ -108,4 +127,23 @@ public class PlayerBehaviour : MonoBehaviour
         animator.SetFloat("Speed", m_rigidBody.velocity.magnitude);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Gem")
+        {
+            //Destroy(collision.gameObject);
+            currentScore = currentScore + 50;
+            scoreText.text = ("SCORE: " + currentScore);
+            pickupSound.Play();
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Win")
+        {
+            endImage.SetActive(true);
+            resultText.text = "YOU WON!";
+            Time.timeScale = 0;
+        }
+    }
 }

@@ -5,8 +5,10 @@ using Pathfinding;
 public class EnemyBehaviour : MonoBehaviour
 {
     public float speed;
+    public GameObject player;
     public float direction;
     public Transform startTransform;
+    public GameObject gemPrefab;
     private Vector3 startPos;
     public Transform playerTransform;
     public AIPath aiPath;
@@ -15,6 +17,8 @@ public class EnemyBehaviour : MonoBehaviour
     public Transform attackPoint;
     public float attackRange = 2.5f;
     public LayerMask playerLayer;
+    private int frame=240;
+    private int maxFrame=240;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,16 +26,15 @@ public class EnemyBehaviour : MonoBehaviour
         startPos = startTransform.position;
         destinationSetter.target = null;
     }
-    //public void enableAttacking()
-    //{
-    //    animator.SetTrigger("AttackTrigger");
-    //    Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
-    //    foreach(Collider2D player in hitPlayer)
-    //    {
-    //        Debug.Log("asd damage");
-    //        player.GetComponent<PlayerBehaviour>().applyDamage(20);
-    //    }
-    //}
+    public void enableAttacking()
+    {
+        animator.SetTrigger("AttackTrigger");
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, playerLayer);
+        foreach (Collider2D player in hitPlayer)
+        {
+            player.GetComponent<PlayerBehaviour>().applyDamage(20);
+        }
+    }
     private void SetLocalScale()
     {
         if(aiPath.desiredVelocity.x>0)
@@ -43,20 +46,27 @@ public class EnemyBehaviour : MonoBehaviour
             transform.localScale = new Vector3(-0.25f, 0.25f, 1f);
         }
     }
-    //private void OnDrawGizmosSelected()
-    //{
-    //    if (attackPoint == null)
-    //        return;
-    //    Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    //}
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
     // Update is called once per frame
     void Update()
     {
-        //if ((Vector3.Distance(playerTransform.position, transform.position)) <= 2f)
-        //{
-        //    Debug.Log("in range");
-        //    enableAttacking();
-        //}
+        if ((Vector3.Distance(playerTransform.position, transform.position)) <= 1.5f)
+        {
+            if (frame == maxFrame)
+            {
+                Debug.Log("in range");
+                enableAttacking();
+                frame = 0;
+            }
+            else
+                frame++;
+
+        }
 
         SetLocalScale();
         if ((transform.position.x - startPos.x < 0.01f || transform.position.x - startPos.x < -0.01f) &&
@@ -71,14 +81,6 @@ public class EnemyBehaviour : MonoBehaviour
     private void followPlayer()
     {
         destinationSetter.target = playerTransform;
-    //    if ((transform.position.x - playerTransform.position.x < 0.05f || transform.position.x - playerTransform.position.x < -0.05f) &&
-    //(transform.position.y - playerTransform.position.y < 0.05f || transform.position.y - playerTransform.position.y < -0.05f))
-
-    //    {
-    //        Debug.Log("asd in range");
-    //        enableAttacking();
-    //    }
-
     }
     private void patrol()
     {
@@ -101,8 +103,22 @@ public class EnemyBehaviour : MonoBehaviour
     }
     public void Die()
     {
+        player.GetComponent<PlayerBehaviour>().currentScore += 50;
+        player.GetComponent<PlayerBehaviour>().scoreText.text = ("SCORE: " + player.GetComponent<PlayerBehaviour>().currentScore);
+        Random.InitState(System.DateTime.Now.Millisecond);
+
+        int rand = Random.Range(1, 10);
+        if (rand < 6)
+        {
+            Instantiate(gemPrefab, transform.position, Quaternion.identity);
+        }
+
+
         animator.SetBool("isDead", true);
         this.enabled = false;
-        GetComponent<Collider2D>().enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<CapsuleCollider2D>().enabled = false;
+
+
     }
 }
