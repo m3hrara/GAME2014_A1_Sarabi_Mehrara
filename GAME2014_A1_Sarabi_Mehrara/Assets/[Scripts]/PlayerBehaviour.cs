@@ -3,8 +3,8 @@ PlayerBehaviour.cs
 Author: Mehrara Sarabi 
 Student ID: 101247463
 Last modified: 2021-10-24
-Description: This code encapsulates all player behaviour. It has a move function that moves player tp the last 
-touch iput position. enableAttacking will hit and kill enemies if attack button is pressed. applyDamage and Die take
+Description: This code encapsulates all player behaviour. It has a move function that moves player to the last 
+touch input position. enableAttacking will hit and kill enemies if attack button is pressed. applyDamage and Die take
 care of when player is hit and when it's dead.
 */
 using System.Collections;
